@@ -1,20 +1,3 @@
-# A headless service to create DNS records
-apiVersion:                          v1
-kind:                                Service
-metadata:
-  name:                              spark-history
-  namespace:                         yarn-cluster
-  labels:
-    component:                       spark-history
-spec:
-  ports:
-  - port:                            7777
-    name:                            web
-  # *.spark-history.yarn-cluster.svc.cluster.local
-  clusterIP:                         None
-  selector:
-    component:                       spark-history
----
 # Service to access the yarn web ui
 apiVersion:                          v1
 kind:                                Service
@@ -49,7 +32,6 @@ kind:                                Deployment
 metadata:
   name:                              spark-history
 spec:
-  serviceName:                       "spark-history"
   replicas:                          1
   template:
     metadata:
