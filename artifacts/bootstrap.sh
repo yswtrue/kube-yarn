@@ -22,7 +22,7 @@ done
 cd $HADOOP_PREFIX/share/hadoop/common ; for cp in ${ACP//,/ }; do  echo == $cp; curl -LO $cp ; done; cd -
 
 if [[ "${HOSTNAME}" =~ "hdfs-nn" ]]; then
-    if [! -d "/root/hdfs/namenode"]; then
+    if [ ! -d "/root/hdfs/namenode"]; then
         mkdir -p /root/hdfs/namenode
         $HADOOP_PREFIX/bin/hdfs namenode -format -force -nonInteractive
     fi
