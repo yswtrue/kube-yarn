@@ -16,11 +16,13 @@ ENV HADOOP_PREFIX=/usr/local/hadoop \
     HADOOP_YARN_HOME=/usr/local/hadoop \
     HADOOP_CONF_DIR=/usr/local/hadoop/etc/hadoop \
     YARN_CONF_DIR=/usr/local/hadoop/etc/hadoop \
+    SPARK_PREFIX=/usr/local/spark \
+    SPARK_CONF_DIR=/usr/local/spark/conf \
     PATH=${PATH}:/usr/local/hadoop/bin:/usr/local/spark/bin
 
 RUN \
   cd /usr/local && ln -s ./hadoop-${HADOOP_VERSION} hadoop && \
-  ln -s ./spark-${SPARK_VERSION}-bin-${SPARK_HADOOP_VERSION} spark 
+  ln -s ./spark-${SPARK_VERSION}-bin-hadoop${SPARK_HADOOP_VERSION} spark
   # rm -f ${HADOOP_PREFIX}/logs/*
 
 WORKDIR $HADOOP_PREFIX

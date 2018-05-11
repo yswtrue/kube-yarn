@@ -28,6 +28,9 @@ YARN_FILES=$(addprefix $(MANIFESTS)/,$(YARN_FILES_BASE))
 ZEPPELIN_FILES_BASE=zeppelin-statefulset.yaml
 ZEPPELIN_FILES=$(addprefix $(MANIFESTS)/,$(ZEPPELIN_FILES_BASE))
 
+SPARK_FILES_BASE=spark-deployment.yaml
+SPARK_FILES=$(addprefix $(MANIFESTS)/,$(SPARK_FILES_BASE))
+
 all: init create-apps
 init: create-ns create-configmap
 clean: delete-apps delete-configmap delete-ns
@@ -85,7 +88,7 @@ get-configmap: kubectl
 
 
 ### All apps
-create-apps: create-hdfs create-yarn create-zeppelin
+create-apps: create-hdfs create-yarn create-zeppelin create-spark
 delete-apps: delete-zeppelin delete-yarn delete-hdfs
 
 
@@ -108,6 +111,8 @@ scale-nm: kubectl
 ### Zeppelin
 create-zeppelin: $(ZEPPELIN_FILES)
 delete-zeppelin: delete-zeppelin-pf $(addsuffix .delete,$(ZEPPELIN_FILES)) delete-statefulset-pods-zeppelin
+
+create-spark: $(SPARK_FILES)
 
 ### Helper targets
 get-ns: kubectl
