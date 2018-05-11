@@ -15,7 +15,7 @@ all: build
 ### Build hadoop 2.6 and 2.7 images with native libs.
 build: build-$(HADOOP_27_VERSION)
 
-build-%: spark-$(SPARK_VERSION).tgz hadoop-native-%.tar
+build-%: spark-$(SPARK_VERSION)-bin-hadoop2.7.tgz hadoop-native-%.tar
 	$(DOCKER) build -t hadoop:$* \
 	--build-arg HADOOP_VERSION=$* \
 	--build-arg SPARK_VERSION=$(SPARK_VERSION) \
@@ -49,7 +49,7 @@ protobuf-%.tar.bz2:
 
 
 ### Fetch spark source
-spark-%.tgz:
+spark-%-bin-hadoop2.7.tgz:
 	curl -sfL https://www.apache.org/dyn/closer.lua/spark/spark-$*/spark-$*-bin-hadoop2.7.tgz | \
 		egrep -C 3 "We suggest" | \
 		perl -n -e'/href="(.*?)"/ && print $$1' | \
