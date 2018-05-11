@@ -71,6 +71,13 @@ EOM
     ./start-yarn-nm.sh
 fi
 
+
+if [[ "${HOSTNAME}" =~ "spark-history" ]]; then
+    cd $SPARK_PREFIX/sbin
+    chmod +x start-history-server.sh
+    ./start-history-server.sh
+fi
+
 if [[ $1 == "-d" ]]; then
     until find ${HADOOP_PREFIX}/logs -mmin -1 | egrep -q '.*'; echo "`date`: Waiting for logs..." ; do sleep 2 ; done
     tail -F ${HADOOP_PREFIX}/logs/* &

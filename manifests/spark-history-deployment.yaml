@@ -2,65 +2,67 @@
 apiVersion:                          v1
 kind:                                Service
 metadata:
-  name:                              hdfs-nn
+  name:                              spark-history
   namespace:                         yarn-cluster
   labels:
-    component:                       hdfs-nn
+    component:                       spark-history
 spec:
   ports:
-  - name:                            dfs
-    port:                            9000
-    protocol:                        TCP
-  # *.hdfs-nn.yarn-cluster.svc.cluster.local
+  - port:                            7777
+    name:                            web
+  # *.spark-history.yarn-cluster.svc.cluster.local
   clusterIP:                         None
   selector:
-    component:                       hdfs-nn
+    component:                       spark-history
 ---
 # Service to access the yarn web ui
 apiVersion:                          v1
 kind:                                Service
 metadata:
-  name:                              hdfs-ui
+  name:                              spark-history
   namespace:                         yarn-cluster
   labels:
-    component:                       hdfs-nn
+    component:                       spark-history
 spec:
   ports:
-  - port:                            50070
+  - port:                            7777
     name:                            web
   type:                              NodePort
   selector:
-    component:                       hdfs-nn
+    component:                       spark-history
 ---
 apiVersion:                          extensions/v1beta1
 kind:                                Ingress
 metadata:
-  name:                              hdfs-ui
+  name:                              spark-history
 spec:
   rules:
-    - host:                          hdfsui.k8s
+    - host:                          sparkhistory.k8s
       http:
         paths:
           - backend:
-              serviceName:           hdfs-ui
-              servicePort:           50070
+              serviceName:           spark-history
+              servicePort:           7777
 ---
 apiVersion:                          apps/v1beta1
-kind:                                StatefulSet
+kind:                                Deployment
 metadata:
-  name:                              hdfs-nn
+  name:                              spark-history
 spec:
-  serviceName:                       "hdfs-nn"
+  serviceName:                       "spark-history"
   replicas:                          1
   template:
     metadata:
       labels:
-        component:                   hdfs-nn
+        component:                   spark-history
     spec:
       terminationGracePeriodSeconds: 0
       containers:
-      - name:                        hdfs-nn
+      - name:                        spark-history
         image:                       yswtrue/hadoop:2.7.6
+        ports:
+        - containerPort:             7777
+          name:                      web
         command:
            - "/bin/bash"
            - "/tmp/hadoop-config/bootstrap.sh"
@@ -71,7 +73,7 @@ spec:
             cpu:                     "100m"
           limits:
             memory:                  "2048Mi"
-            cpu:                     "1000m"
+            cpu:                     "2000m"
         volumeMounts:
           - name:                    hadoop-config
             mountPath:               /tmp/hadoop-config

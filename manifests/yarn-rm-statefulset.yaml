@@ -31,6 +31,19 @@ spec:
   selector:
     component:                       yarn-rm
 ---
+apiVersion:                          extensions/v1beta1
+kind:                                Ingress
+metadata:
+  name:                              yarn-ui
+spec:
+  rules:
+    - host:                          yarnui.k8s
+      http:
+        paths:
+          - backend:
+              serviceName:           yarn-ui
+              servicePort:           8088
+---
 apiVersion:                          apps/v1beta1
 kind:                                StatefulSet
 metadata:
