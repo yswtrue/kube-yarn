@@ -5,6 +5,10 @@ ARG HADOOP_VERSION=
 ADD hadoop-${HADOOP_VERSION}.tar.gz /usr/local
 ADD hadoop-native-${HADOOP_VERSION}.tar /usr/local/hadoop-${HADOOP_VERSION}/lib/native
 
+ARG SPARK_VERSION=2.3.0
+ARG SPARK_HADOOP_VERSION=2.7
+ADD spark-${SPARK_VERSION}-bin-hadoop${SPARK_HADOOP_VERSION}.tgz /usr/local
+
 ENV HADOOP_PREFIX=/usr/local/hadoop \
     HADOOP_COMMON_HOME=/usr/local/hadoop \
     HADOOP_HDFS_HOME=/usr/local/hadoop \
@@ -12,11 +16,12 @@ ENV HADOOP_PREFIX=/usr/local/hadoop \
     HADOOP_YARN_HOME=/usr/local/hadoop \
     HADOOP_CONF_DIR=/usr/local/hadoop/etc/hadoop \
     YARN_CONF_DIR=/usr/local/hadoop/etc/hadoop \
-    PATH=${PATH}:/usr/local/hadoop/bin
+    PATH=${PATH}:/usr/local/hadoop/bin:/usr/local/spark/bin
 
 RUN \
   cd /usr/local && ln -s ./hadoop-${HADOOP_VERSION} hadoop && \
-  rm -f ${HADOOP_PREFIX}/logs/*
+  ln -s ./spark-${SPARK_VERSION}-bin-${SPARK_HADOOP_VERSION} spark 
+  # rm -f ${HADOOP_PREFIX}/logs/*
 
 WORKDIR $HADOOP_PREFIX
 
