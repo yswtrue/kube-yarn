@@ -10,7 +10,7 @@ CONFIG_DIR="/tmp/hadoop-config"
 # Copy config files from volume mount
 
 for f in slaves core-site.xml hdfs-site.xml mapred-site.xml yarn-site.xml; do
-    if [ -e ${CONFIG_DIR}/$f ]; then
+    if [[ -e ${CONFIG_DIR}/$f ]]; then
         cp ${CONFIG_DIR}/$f $HADOOP_PREFIX/etc/hadoop/$f
     else
         echo "ERROR: Could not find $f in $CONFIG_DIR"
@@ -22,7 +22,7 @@ done
 cd $HADOOP_PREFIX/share/hadoop/common ; for cp in ${ACP//,/ }; do  echo == $cp; curl -LO $cp ; done; cd -
 
 if [[ "${HOSTNAME}" =~ "hdfs-nn" ]]; then
-    if [!-d '/root/hdfs/namenode']; then
+    if [[!-d "/root/hdfs/namenode"]]; then
         mkdir -p /root/hdfs/namenode
         $HADOOP_PREFIX/bin/hdfs namenode -format -force -nonInteractive
     fi
