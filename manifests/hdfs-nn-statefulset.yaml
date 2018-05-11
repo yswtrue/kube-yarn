@@ -16,6 +16,22 @@ spec:
   selector:
     component:                       hdfs-nn
 ---
+# Service to access the yarn web ui
+apiVersion:                          v1
+kind:                                Service
+metadata:
+  name:                              hdfs-ui
+  namespace:                         yarn-cluster
+  labels:
+    component:                       hdfs-nn
+spec:
+  ports:
+  - port:                            50070
+    name:                            web
+  type:                              NodePort
+  selector:
+    component:                       hdfs-nn
+---
 apiVersion:                          apps/v1beta1
 kind:                                StatefulSet
 metadata:
