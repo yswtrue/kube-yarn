@@ -8,16 +8,13 @@
 CONFIG_DIR="/tmp/hadoop-config"
 
 # Copy config files from volume mount
-
-for f in slaves core-site.xml hdfs-site.xml mapred-site.xml yarn-site.xml; do
-    if [ -e ${CONFIG_DIR}/$f ]; then
-        cp ${CONFIG_DIR}/$f $HADOOP_PREFIX/etc/hadoop/$f
-        cp ${CONFIG_DIR}/$f $SPARK_PREFIX/conf/$f
-    else
-        echo "ERROR: Could not find $f in $CONFIG_DIR"
-        exit 1
-    fi
-done
+if [ -d ${CONFIG_DIR} ]; then
+    cp ${CONFIG_DIR}/* $HADOOP_PREFIX/etc/hadoop/
+    cp ${CONFIG_DIR}/* $SPARK_PREFIX/conf/
+else
+    echo "ERROR: Could not find config file in $CONFIG_DIR"
+    exit 1
+fi
 
 # installing libraries if any - (resource urls added comma separated to the ACP system variable)
 cd $HADOOP_PREFIX/share/hadoop/common ; for cp in ${ACP//,/ }; do  echo == $cp; curl -LO $cp ; done; cd -
