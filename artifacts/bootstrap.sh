@@ -12,6 +12,7 @@ CONFIG_DIR="/tmp/hadoop-config"
 for f in slaves core-site.xml hdfs-site.xml mapred-site.xml yarn-site.xml; do
     if [ -e ${CONFIG_DIR}/$f ]; then
         cp ${CONFIG_DIR}/$f $HADOOP_PREFIX/etc/hadoop/$f
+        cp ${CONFIG_DIR}/$f $SPARK_PREFIX/conf/$f
     else
         echo "ERROR: Could not find $f in $CONFIG_DIR"
         exit 1
