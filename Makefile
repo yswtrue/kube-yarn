@@ -70,7 +70,7 @@ delete-ns: $(addsuffix .delete,$(NAMESPACE_FILES))
 
 ### Config Map
 create-configmap: kubectl
-	$(KUBECTL) create configmap hadoop-config $(find artifacts -type f | xargs echo ''| sed 's/ / --from-file=/g')
+	$(KUBECTL) create configmap hadoop-config $(echo $(find artifacts -type f | xargs echo ''| sed 's/ / --from-file=/g'))
 
 delete-configmap: kubectl
 	-$(KUBECTL) delete configmap hadoop-config
