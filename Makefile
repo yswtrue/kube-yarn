@@ -70,15 +70,7 @@ delete-ns: $(addsuffix .delete,$(NAMESPACE_FILES))
 
 ### Config Map
 create-configmap: kubectl
-	$(KUBECTL) create configmap hadoop-config \
-	  --from-file=artifacts/bootstrap.sh \
-	  --from-file=artifacts/start-yarn-rm.sh \
-	  --from-file=artifacts/start-yarn-nm.sh \
-	  --from-file=artifacts/slaves \
-	  --from-file=artifacts/core-site.xml \
-	  --from-file=artifacts/hdfs-site.xml \
-	  --from-file=artifacts/mapred-site.xml \
-	  --from-file=artifacts/yarn-site.xml
+	$(KUBECTL) create configmap hadoop-config $(find artifacts -type f | xargs echo ''| sed 's/ / --from-file=/g')
 
 delete-configmap: kubectl
 	-$(KUBECTL) delete configmap hadoop-config
