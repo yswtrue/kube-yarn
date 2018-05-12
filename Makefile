@@ -28,7 +28,7 @@ YARN_FILES=$(addprefix $(MANIFESTS)/,$(YARN_FILES_BASE))
 ZEPPELIN_FILES_BASE=zeppelin-statefulset.yaml
 ZEPPELIN_FILES=$(addprefix $(MANIFESTS)/,$(ZEPPELIN_FILES_BASE))
 
-SPARK_FILES_BASE=spark-deployment.yaml
+SPARK_FILES_BASE=spark-history-deployment.yaml
 SPARK_FILES=$(addprefix $(MANIFESTS)/,$(SPARK_FILES_BASE))
 
 all: init create-apps
