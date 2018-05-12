@@ -71,6 +71,10 @@ fi
 
 
 if [[ "${HOSTNAME}" =~ "spark-history" ]]; then
+    #  wait up to 30 seconds for namenode
+    count=0 && while [[ $count -lt 15 && -z `curl -sf http://hdfs-nn:50070` ]]; do echo "Waiting for hdfs-nn" ; ((count=count+1)) ; sleep 2; done
+    [[ $count -eq 15 ]] && echo "Timeout waiting for hdfs-nn, exiting." && exit 1
+    hfds dfs -mkdir -p /spark/logs
     cd $SPARK_PREFIX/sbin
     chmod +x start-history-server.sh
     ./start-history-server.sh
