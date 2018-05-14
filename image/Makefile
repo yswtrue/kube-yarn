@@ -6,6 +6,7 @@ HADOOP_26_VERSION = 2.6.5
 HADOOP_27_VERSION = 2.7.6
 PROTOBUF_VERSION = 2.5.0
 SPARK_VERSION=2.3.0
+PYTHON_VERSION=3.6.5
 
 DOCKER = docker
 DOCKER_REPO = yswtrue/hadoop
@@ -15,7 +16,7 @@ all: build
 ### Build hadoop 2.6 and 2.7 images with native libs.
 build: build-$(HADOOP_27_VERSION)
 
-build-%: spark-$(SPARK_VERSION)-bin-hadoop2.7.tgz hadoop-native-%.tar
+build-%: Python-$(PYTHON_VERSION).tgz spark-$(SPARK_VERSION)-bin-hadoop2.7.tgz hadoop-native-%.tar
 	$(DOCKER) build -t hadoop:$* \
 	--build-arg HADOOP_VERSION=$* \
 	--build-arg SPARK_VERSION=$(SPARK_VERSION) \
@@ -55,8 +56,12 @@ spark-%-bin-hadoop2.7.tgz:
 		perl -n -e'/href="(.*?)"/ && print $$1' | \
 		xargs curl -LO
 
+Python-%.tgz:
+	curl -LO https://www.python.org/ftp/python/$*/Python-$*.tgz
+
+
 # Keep intermediate downloads.
-.PRECIOUS: spark-%-bin-hadoop2.7.tgz protobuf-%.tar.bz2 hadoop-%-src.tar.gz hadoop-%.tar.gz
+.PRECIOUS: Python-%.tgz spark-%-bin-hadoop2.7.tgz protobuf-%.tar.bz2 hadoop-%-src.tar.gz hadoop-%.tar.gz
 
 ### Compile native libs (~10min)
 native_libs_%: hadoop-%-src.tar.gz protobuf-$(PROTOBUF_VERSION).tar.bz2

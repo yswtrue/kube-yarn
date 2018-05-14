@@ -9,7 +9,12 @@ ARG SPARK_VERSION=2.3.0
 ARG SPARK_HADOOP_VERSION=2.7
 ADD spark-${SPARK_VERSION}-bin-hadoop${SPARK_HADOOP_VERSION}.tgz /usr/local
 
+ARG PYTHON_VERSION=3.6.5
+ADD Python-${PYTHON_VERSION}.tgz /tmp
+
+
 ENV HADOOP_PREFIX=/usr/local/hadoop \
+    HADOOP_HOME=/usr/local/hadoop \
     HADOOP_COMMON_HOME=/usr/local/hadoop \
     HADOOP_HDFS_HOME=/usr/local/hadoop \
     HADOOP_MAPRED_HOME=/usr/local/hadoop \
@@ -17,6 +22,7 @@ ENV HADOOP_PREFIX=/usr/local/hadoop \
     HADOOP_CONF_DIR=/usr/local/hadoop/etc/hadoop \
     YARN_CONF_DIR=/usr/local/hadoop/etc/hadoop \
     SPARK_PREFIX=/usr/local/spark \
+    SPARK_HOME=/usr/local/spark \
     SPARK_CONF_DIR=/usr/local/spark/conf \
     PATH=${PATH}:/usr/local/hadoop/bin:/usr/local/spark/bin
 
@@ -24,6 +30,22 @@ RUN \
   cd /usr/local && ln -s ./hadoop-${HADOOP_VERSION} hadoop && \
   ln -s ./spark-${SPARK_VERSION}-bin-hadoop${SPARK_HADOOP_VERSION} spark
   # rm -f ${HADOOP_PREFIX}/logs/*
+
+# install python
+RUN apt-get update && \
+    apt-get install -y make build-essential libssl-dev zlib1g-dev && \
+    apt-get install -y libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm && \
+    apt-get install -y libncurses5-dev  libncursesw5-dev xz-utils tk-dev libtcmalloc-minimal4
+
+RUN export LD_PRELOAD="/usr/lib/libtcmalloc_minimal.so.4" && \
+    cd /tmp/Python-${PYTHON_VERSION} && \
+    ./configure --enable-optimizations && \
+    make -j5 && \
+    make install
+
+RUN update-alternatives --install /usr/bin/python python /usr/local/bin/python3 50
+
+RUN rm -rf /tmp/*
 
 WORKDIR $HADOOP_PREFIX
 
