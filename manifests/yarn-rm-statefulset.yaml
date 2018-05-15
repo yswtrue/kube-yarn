@@ -27,7 +27,6 @@ spec:
   ports:
   - port:                            8088
     name:                            web
-  type:                              NodePort
   selector:
     component:                       yarn-rm
 ---
