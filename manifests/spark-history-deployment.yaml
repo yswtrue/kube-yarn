@@ -41,6 +41,7 @@ spec:
       terminationGracePeriodSeconds: 0
       containers:
       - name:                        spark-history
+        imagePullPolicy:             Always
         env:
           - name:                    MY_POD_NAME
             valueFrom:
