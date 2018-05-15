@@ -189,3 +189,10 @@ Or:
 ```
 make stop-minikube
 ```
+
+
+# StatefulSet Local Storage
+
+## Refer to:
+[External Storage](https://github.com/kubernetes-incubator/external-storage)
+[NFS Server Provisioner](https://github.com/kubernetes/charts/tree/master/stable/nfs-server-provisioner)
