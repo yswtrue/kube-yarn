@@ -39,6 +39,19 @@ spec:
         component:                   spark-history
     spec:
       terminationGracePeriodSeconds: 0
+      env:
+        - name:                      MY_POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath:             metadata.name
+        - name:                      MY_POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath:             metadata.namespace
+        - name:                      MY_POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath:             status.podIP
       containers:
       - name:                        spark-history
         image:                       yswtrue/hadoop:2.7.6

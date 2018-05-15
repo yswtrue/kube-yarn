@@ -75,6 +75,9 @@ if [[ "${HOSTNAME}" =~ "spark-history" ]]; then
     count=0 && while [[ $count -lt 15 && -z `curl -sf http://hdfs-nn:50070` ]]; do echo "Waiting for hdfs-nn" ; ((count=count+1)) ; sleep 2; done
     [[ $count -eq 15 ]] && echo "Timeout waiting for hdfs-nn, exiting." && exit 1
     hdfs dfs -mkdir -p /logs/spark
+    # replace spark local ip
+    sed -i "s/spark.driver.bindAddress.*/spark.driver.bindAddress\t\t${MY_POD_IP}/g" ${SPARK_HOME}/conf/spark-defaults.conf
+    sed -i "s/spark.driver.host.*/spark.driver.host\t\t${MY_POD_IP}/g" ${SPARK_HOME}/conf/spark-defaults.conf
     cd $SPARK_PREFIX/sbin
     chmod +x start-history-server.sh
     ./start-history-server.sh
