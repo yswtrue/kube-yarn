@@ -31,6 +31,12 @@ ZEPPELIN_FILES=$(addprefix $(MANIFESTS)/,$(ZEPPELIN_FILES_BASE))
 SPARK_FILES_BASE=spark-history-deployment.yaml
 SPARK_FILES=$(addprefix $(MANIFESTS)/,$(SPARK_FILES_BASE))
 
+HIVE_FILES_BASE=hive-deployment.yaml
+HIVE_FILES=$(addprefix $(MANIFESTS)/,$(HIVE_FILES_BASE))
+
+FLUME_FILES_BASE=flume-deployment.yaml
+FLUME_FILES=$(addprefix $(MANIFESTS)/,$(FLUME_FILES_BASE))
+
 all: init create-apps
 init: create-ns create-configmap
 clean: delete-apps delete-configmap delete-ns
@@ -80,8 +86,8 @@ get-configmap: kubectl
 
 
 ### All apps
-create-apps: create-hdfs create-yarn create-zeppelin create-spark
-delete-apps: delete-zeppelin delete-yarn delete-hdfs
+create-apps: create-hdfs create-yarn create-zeppelin create-spark create-hive create-flume
+delete-apps: delete-zeppelin delete-yarn delete-hdfs delete-spark delete-hive delete-flume
 
 
 ### HDFS
@@ -105,6 +111,13 @@ create-zeppelin: $(ZEPPELIN_FILES)
 delete-zeppelin: delete-zeppelin-pf $(addsuffix .delete,$(ZEPPELIN_FILES)) delete-statefulset-pods-zeppelin
 
 create-spark: $(SPARK_FILES)
+delete-spark: $(addsuffix .delete,$(ZEPPELIN_FILES)) delete-statefulset-pods-spark
+
+create-hive: $(SPARK_FILES)
+delete-hive: $(addsuffix .delete,$(ZEPPELIN_FILES)) delete-statefulset-pods-hive
+
+create-flume: $(SPARK_FILES)
+delete-flume: $(addsuffix .delete,$(ZEPPELIN_FILES)) delete-statefulset-pods-flume
 
 ### Helper targets
 get-ns: kubectl

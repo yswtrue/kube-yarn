@@ -69,7 +69,6 @@ EOM
     ./start-yarn-nm.sh
 fi
 
-
 if [[ "${HOSTNAME}" =~ "spark-history" ]]; then
     #  wait up to 30 seconds for namenode
     count=0 && while [[ $count -lt 15 && -z `curl -sf http://hdfs-nn:50070` ]]; do echo "Waiting for hdfs-nn" ; ((count=count+1)) ; sleep 2; done
@@ -81,6 +80,18 @@ if [[ "${HOSTNAME}" =~ "spark-history" ]]; then
     cd $SPARK_PREFIX/sbin
     chmod +x start-history-server.sh
     ./start-history-server.sh
+fi
+
+if [[ "${HOSTNAME}" =~ "hive" ]]; then
+    #  wait up to 30 seconds for namenode
+    count=0 && while [[ $count -lt 15 && -z `curl -sf http://hdfs-nn:50070` ]]; do echo "Waiting for hdfs-nn" ; ((count=count+1)) ; sleep 2; done
+    [[ $count -eq 15 ]] && echo "Timeout waiting for hdfs-nn, exiting." && exit 1
+    hdfs dfs -mkdir -p /tmp
+    hdfs dfs -mkdir -p /user/hive/warehouse
+    hdfs dfs -chmod g+w /tmp
+    hdfs dfs -chmod g+w /user/hive/warehouse
+    cd $HIVE_HOME/bin
+    hive
 fi
 
 if [[ $1 == "-d" ]]; then

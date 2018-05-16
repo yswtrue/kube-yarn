@@ -7,6 +7,8 @@ HADOOP_27_VERSION = 2.7.6
 PROTOBUF_VERSION = 2.5.0
 SPARK_VERSION=2.3.0
 PYTHON_VERSION=3.6.5
+HIVE_VERSION=2.3.3
+FLUME_VERSION=1.8.0
 
 DOCKER = docker
 DOCKER_REPO = yswtrue/hadoop
@@ -16,10 +18,13 @@ all: build
 ### Build hadoop 2.6 and 2.7 images with native libs.
 build: build-$(HADOOP_27_VERSION)
 
-build-%: Python-$(PYTHON_VERSION).tgz spark-$(SPARK_VERSION)-bin-hadoop2.7.tgz hadoop-native-%.tar
+build-%: apache-flume-$(FLUME_VERSION)-bin.tar.gz apache-hive-$(HIVE_VERSION)-bin.tar.gz Python-$(PYTHON_VERSION).tgz spark-$(SPARK_VERSION)-bin-hadoop2.7.tgz hadoop-native-%.tar
 	$(DOCKER) build -t hadoop:$* \
 	--build-arg HADOOP_VERSION=$* \
 	--build-arg SPARK_VERSION=$(SPARK_VERSION) \
+	--build-arg PYTHON_VERSION=$(PYTHON_VERSION) \
+	--build-arg HIVE_VERSION=$(HIVE_VERSION) \
+	--build-arg FLUME_VERSION=$(FLUME_VERSION) \
 	.
 
 tag: tag-$(HADOOP_27_VERSION)
@@ -59,9 +64,18 @@ spark-%-bin-hadoop2.7.tgz:
 Python-%.tgz:
 	curl -LO https://www.python.org/ftp/python/$*/Python-$*.tgz
 
+apache-hive-%-bin.tar.gz:
+	curl -LO http://www-us.apache.org/dist/hive/hive-$*/apache-hive-$*-bin.tar.gz
+
+apache-flume-%-bin.tar.gz:
+	curl -sfL http://www.apache.org/dyn/closer.lua/flume/$*/apache-flume-$*-bin.tar.gz | \
+		egrep -C 3 "We suggest" | \
+		perl -n -e'/href="(.*?)"/ && print $$1' | \
+		xargs curl -LO
+
 
 # Keep intermediate downloads.
-.PRECIOUS: Python-%.tgz spark-%-bin-hadoop2.7.tgz protobuf-%.tar.bz2 hadoop-%-src.tar.gz hadoop-%.tar.gz
+.PRECIOUS: apache-hive-%-bin.tar.gz apache-flume-%-bin.tar.gz Python-%.tgz spark-%-bin-hadoop2.7.tgz protobuf-%.tar.bz2 hadoop-%-src.tar.gz hadoop-%.tar.gz
 
 ### Compile native libs (~10min)
 native_libs_%: hadoop-%-src.tar.gz protobuf-$(PROTOBUF_VERSION).tar.bz2

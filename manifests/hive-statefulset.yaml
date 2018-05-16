@@ -1,0 +1,46 @@
+# A headless service to create DNS records
+apiVersion:                          apps/v1beta1
+kind:                                StatefulSet
+metadata:
+  name:                              hive
+spec:
+  serviceName:                       hive
+  template:
+    metadata:
+      labels:
+        component:                   hive
+    spec:
+      terminationGracePeriodSeconds: 0
+      containers:
+      - name:                        hive
+        image:                       yswtrue/hadoop:2.7.6
+        command:
+           - "/bin/bash"
+           - "/tmp/hadoop-config/bootstrap.sh"
+        resources:
+          requests:
+            memory:                  "1024Mi"
+            cpu:                     "100m"
+          limits:
+            memory:                  "2048Mi"
+            cpu:                     "4000m"
+        env:
+          - name:                    MY_CPU_LIMIT
+            valueFrom:
+              resourceFieldRef:
+                containerName:       hive
+                resource:            limits.cpu
+                divisor:             1
+          - name:                    MY_MEM_LIMIT
+            valueFrom:
+              resourceFieldRef:
+                containerName:       hive
+                resource:            limits.memory
+                divisor:             1M
+        volumeMounts:
+          - name:                    hadoop-config
+            mountPath:               /tmp/hadoop-config
+      volumes:
+        - name:                      hadoop-config
+          configMap:
+            name:                    hadoop-config

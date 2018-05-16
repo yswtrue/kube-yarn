@@ -12,6 +12,11 @@ ADD spark-${SPARK_VERSION}-bin-hadoop${SPARK_HADOOP_VERSION}.tgz /usr/local
 ARG PYTHON_VERSION=3.6.5
 ADD Python-${PYTHON_VERSION}.tgz /tmp
 
+ARG HIVE_VERSION=3.6.5
+ADD apache-hive-${HIVE_VERSION}-bin.tar.gz /usr/local
+
+ARG FLUME_VERSION=3.6.5
+ADD apache-flume-${FLUME_VERSION}-bin.tar.gz /usr/local
 
 ENV HADOOP_PREFIX=/usr/local/hadoop \
     HADOOP_HOME=/usr/local/hadoop \
@@ -24,11 +29,15 @@ ENV HADOOP_PREFIX=/usr/local/hadoop \
     SPARK_PREFIX=/usr/local/spark \
     SPARK_HOME=/usr/local/spark \
     SPARK_CONF_DIR=/usr/local/spark/conf \
-    PATH=${PATH}:/usr/local/hadoop/bin:/usr/local/spark/bin
+    HIVE_HOME=/usr/local/hive \
+    FLUME_HOME=/usr/local/flume \
+    PATH=${PATH}:/usr/local/hadoop/bin:/usr/local/spark/bin:/usr/local/hive/bin:/usr/local/flume/bin
 
 RUN \
   cd /usr/local && ln -s ./hadoop-${HADOOP_VERSION} hadoop && \
-  ln -s ./spark-${SPARK_VERSION}-bin-hadoop${SPARK_HADOOP_VERSION} spark
+  ln -s ./spark-${SPARK_VERSION}-bin-hadoop${SPARK_HADOOP_VERSION} spark && \
+  ln -s ./apache-flume-${FLUME_VERSION}-bin flume && \
+  ln -s ./apache-hive-${HIVE_VERSION}-bin hive
   # rm -f ${HADOOP_PREFIX}/logs/*
 
 # install python
