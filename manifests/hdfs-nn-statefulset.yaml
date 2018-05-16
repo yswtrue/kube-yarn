@@ -38,7 +38,7 @@ metadata:
   name:                              hdfs-ui
 spec:
   rules:
-    - host:                          hdfsui.k8s
+    - host:                          hdfs-ui
       http:
         paths:
           - backend:
@@ -83,10 +83,10 @@ spec:
             name:                    hadoop-config
   volumeClaimTemplates:
   - metadata:
-      name: data
+      name:                          data
     spec:
-      accessModes: [ "ReadWriteOnce" ]
-      storageClassName: "nfs"
+      accessModes:                   [ "ReadWriteOnce" ]
+      storageClassName:              "nfs"
       resources:
         requests:
-          storage: 200Gi
+          storage:                   200Gi

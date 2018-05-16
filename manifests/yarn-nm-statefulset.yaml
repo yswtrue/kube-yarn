@@ -23,7 +23,7 @@ metadata:
   name:                              yarn-nm
 spec:
   rules:
-    - host:                          yarnui.k8s
+    - host:                          yarn-nm
       http:
         paths:
           - backend:

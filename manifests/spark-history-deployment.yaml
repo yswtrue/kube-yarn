@@ -20,7 +20,7 @@ metadata:
   name:                              spark-history
 spec:
   rules:
-    - host:                          sparkhistory.k8s
+    - host:                          spark-history
       http:
         paths:
           - backend:
