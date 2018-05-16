@@ -46,15 +46,15 @@ spec:
 apiVersion:                          extensions/v1beta1
 kind:                                Ingress
 metadata:
-name:                                yarn-rm
+    name:                            yarn-rm
 spec:
-rules:
-- host:                              yarn-rm
-  http:
-    paths:
-      - backend:
-          serviceName:               yarn-rm
-          servicePort:               8088
+    rules:
+        - host:                      yarn-rm
+          http:
+            paths:
+              - backend:
+                  serviceName:       yarn-rm
+                  servicePort:       8088
 ---
 apiVersion:                          apps/v1beta1
 kind:                                StatefulSet
