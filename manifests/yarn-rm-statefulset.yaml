@@ -36,12 +36,25 @@ metadata:
   name:                              yarn-ui
 spec:
   rules:
-    - host:                          yarnui.k8s
+    - host:                          yarn-ui
       http:
         paths:
           - backend:
               serviceName:           yarn-ui
               servicePort:           8088
+---
+apiVersion:                          extensions/v1beta1
+kind:                                Ingress
+metadata:
+name:                                yarn-rm
+spec:
+rules:
+- host:                              yarn-rm
+  http:
+    paths:
+      - backend:
+          serviceName:               yarn-rm
+          servicePort:               8088
 ---
 apiVersion:                          apps/v1beta1
 kind:                                StatefulSet
