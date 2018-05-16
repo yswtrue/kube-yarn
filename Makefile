@@ -31,10 +31,10 @@ ZEPPELIN_FILES=$(addprefix $(MANIFESTS)/,$(ZEPPELIN_FILES_BASE))
 SPARK_FILES_BASE=spark-history-deployment.yaml
 SPARK_FILES=$(addprefix $(MANIFESTS)/,$(SPARK_FILES_BASE))
 
-HIVE_FILES_BASE=hive-deployment.yaml
+HIVE_FILES_BASE=hive-statefulset.yaml
 HIVE_FILES=$(addprefix $(MANIFESTS)/,$(HIVE_FILES_BASE))
 
-FLUME_FILES_BASE=flume-deployment.yaml
+FLUME_FILES_BASE=flume-statefulset.yaml
 FLUME_FILES=$(addprefix $(MANIFESTS)/,$(FLUME_FILES_BASE))
 
 all: init create-apps
