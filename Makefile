@@ -111,13 +111,13 @@ create-zeppelin: $(ZEPPELIN_FILES)
 delete-zeppelin: delete-zeppelin-pf $(addsuffix .delete,$(ZEPPELIN_FILES)) delete-statefulset-pods-zeppelin
 
 create-spark: $(SPARK_FILES)
-delete-spark: $(addsuffix .delete,$(ZEPPELIN_FILES)) delete-statefulset-pods-spark
+delete-spark: $(addsuffix .delete,$(SPARK_FILES)) delete-statefulset-pods-spark
 
-create-hive: $(SPARK_FILES)
-delete-hive: $(addsuffix .delete,$(ZEPPELIN_FILES)) delete-statefulset-pods-hive
+create-hive: $(HIVE_FILES)
+delete-hive: $(addsuffix .delete,$(HIVE_FILES)) delete-statefulset-pods-hive
 
-create-flume: $(SPARK_FILES)
-delete-flume: $(addsuffix .delete,$(ZEPPELIN_FILES)) delete-statefulset-pods-flume
+create-flume: $(FLUME_FILES)
+delete-flume: $(addsuffix .delete,$(FLUME_FILES)) delete-statefulset-pods-flume
 
 ### Helper targets
 get-ns: kubectl
