@@ -2,17 +2,17 @@
 apiVersion:                          apps/v1beta1
 kind:                                StatefulSet
 metadata:
-  name:                              hive
+  name:                              flume
 spec:
-  serviceName:                       hive
+  serviceName:                       flume
   template:
     metadata:
       labels:
-        component:                   hive
+        component:                   flume
     spec:
       terminationGracePeriodSeconds: 0
       containers:
-      - name:                        hive
+      - name:                        flume
         image:                       yswtrue/hadoop:2.7.6
         command:
            - "/bin/bash"
@@ -28,13 +28,13 @@ spec:
           - name:                    MY_CPU_LIMIT
             valueFrom:
               resourceFieldRef:
-                containerName:       hive
+                containerName:       flume
                 resource:            limits.cpu
                 divisor:             1
           - name:                    MY_MEM_LIMIT
             valueFrom:
               resourceFieldRef:
-                containerName:       hive
+                containerName:       flume
                 resource:            limits.memory
                 divisor:             1M
         volumeMounts:
