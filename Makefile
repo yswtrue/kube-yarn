@@ -31,6 +31,9 @@ ZEPPELIN_FILES=$(addprefix $(MANIFESTS)/,$(ZEPPELIN_FILES_BASE))
 SPARK_FILES_BASE=spark-history-deployment.yaml
 SPARK_FILES=$(addprefix $(MANIFESTS)/,$(SPARK_FILES_BASE))
 
+MYSQL_FILES_BASE=mysql-statefulset.yaml
+MYSQL_FILES=$(addprefix $(MANIFESTS)/,$(MYSQL_FILES_BASE))
+
 HIVE_FILES_BASE=hive-statefulset.yaml
 HIVE_FILES=$(addprefix $(MANIFESTS)/,$(HIVE_FILES_BASE))
 
@@ -86,8 +89,8 @@ get-configmap: kubectl
 
 
 ### All apps
-create-apps: create-hdfs create-yarn create-zeppelin create-spark create-hive create-flume
-delete-apps: delete-zeppelin delete-yarn delete-hdfs delete-spark delete-hive delete-flume
+create-apps: create-hdfs create-yarn create-zeppelin create-spark create-mysql create-hive create-flume
+delete-apps: delete-zeppelin delete-yarn delete-hdfs delete-spark delete-hive delete-flume delete-mysql
 
 
 ### HDFS
@@ -112,6 +115,9 @@ delete-zeppelin: delete-zeppelin-pf $(addsuffix .delete,$(ZEPPELIN_FILES)) delet
 
 create-spark: $(SPARK_FILES)
 delete-spark: $(addsuffix .delete,$(SPARK_FILES)) delete-statefulset-pods-spark
+
+create-mysql: $(MYSQL_FILES)
+delete-mysql: $(addsuffix .delete,$(MYSQL_FILES)) delete-statefulset-pods-mysql
 
 create-hive: $(HIVE_FILES)
 delete-hive: $(addsuffix .delete,$(HIVE_FILES)) delete-statefulset-pods-hive
