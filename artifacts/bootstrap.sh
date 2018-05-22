@@ -84,12 +84,15 @@ fi
 
 if [[ "${HOSTNAME}" =~ "hive" ]]; then
     #  wait up to 30 seconds for namenode
-    count=0 && while [[ $count -lt 15 && -z `curl -sf http://hdfs-nn:50070` ]]; do echo "Waiting for hdfs-nn" ; ((count=count+1)) ; sleep 2; done
-    [[ $count -eq 15 ]] && echo "Timeout waiting for hdfs-nn, exiting." && exit 1
+    hdfs_count=0 && while [[ $hdfs_count -lt 15 && -z `curl -sf http://hdfs-nn:50070` ]]; do echo "Waiting for hdfs-nn" ; ((hdfs_count=hdfs_count+1)) ; sleep 2; done
+    mysql_count=0 && while [[ $mysql_count -lt 15 && -z `curl -sf http://mysql:3306` ]]; do echo "Waiting for mysql" ; ((mysql_count=mysql_count+1)) ; sleep 2; done
+    [[ $hdfs_count -eq 15 ]] && echo "Timeout waiting for hdfs-nn, exiting." && exit 1
+    [[ $mysql_count -eq 15 ]] && echo "Timeout waiting for mysql, exiting." && exit 1
     hdfs dfs -mkdir -p /tmp
     hdfs dfs -mkdir -p /user/hive/warehouse
     hdfs dfs -chmod g+w /tmp
     hdfs dfs -chmod g+w /user/hive/warehouse
+    schematool  -initSchema -dbType mysql -verbose
     cd $HIVE_HOME/bin
     hive
 fi

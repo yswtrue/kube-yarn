@@ -1,0 +1,74 @@
+apiVersion:                          v1
+kind:                                Service
+metadata:
+  name:                              mysql
+  namespace:                         yarn-cluster
+  labels:
+    component:                       mysql
+spec:
+  ports:
+  - port:                            3306
+    name:                            mysql
+  selector:
+    component:                       mysql
+# A headless service to create DNS records
+---
+apiVersion:                          apps/v1beta1
+kind:                                StatefulSet
+metadata:
+  name:                              mysql
+spec:
+  serviceName:                       mysql
+  template:
+    metadata:
+      labels:
+        component:                   mysql
+    spec:
+      terminationGracePeriodSeconds: 0
+      containers:
+      - name:                        mysql
+        image:                       mysql:5.7
+        resources:
+          requests:
+            memory:                  "1024Mi"
+            cpu:                     "100m"
+          limits:
+            memory:                  "2048Mi"
+            cpu:                     "4000m"
+        env:
+          - name:                    MYSQL_PASSWORD
+            value:                   hive
+          - name:                    MYSQL_USER
+            value:                   hive
+          - name:                    MYSQL_DATABASE
+            value:                   hive
+          - name:                    MY_CPU_LIMIT
+            valueFrom:
+              resourceFieldRef:
+                containerName:       mysql
+                resource:            limits.cpu
+                divisor:             1
+          - name:                    MY_MEM_LIMIT
+            valueFrom:
+              resourceFieldRef:
+                containerName:       mysql
+                resource:            limits.memory
+                divisor:             1M
+        volumeMounts:
+          - name:                    hadoop-config
+            mountPath:               /tmp/hadoop-config
+          - name:                    mysql
+            mountPath:               /var/lib/mysql
+      volumes:
+        - name:                      hadoop-config
+          configMap:
+            name:                    hadoop-config
+  volumeClaimTemplates:
+  - metadata:
+      name:                          mysql
+    spec:
+      accessModes:                   [ "ReadWriteOnce" ]
+      storageClassName:              "nfs"
+      resources:
+        requests:
+          storage:                   10Gi
