@@ -1,6 +1,6 @@
 #!/bin/bash
 
-files=$(find * -name '*.sh' -not -name 'tmp.sh')
+files=$(find * -name '*.sql')
 for file in $files;
 do
     echo $file;
