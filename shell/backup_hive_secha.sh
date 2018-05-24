@@ -11,7 +11,7 @@ do
     for table in $ret;
     do
         hive -e "use ${database};show create table $table" >> /tmp/hive_export/${database}_secha.sql
-        echo -e ';\c' >> /tmp/hive_export/${database}_secha.sql
+        echo -e ';' >> /tmp/hive_export/${database}_secha.sql
         echo -e "MSCK REPAIR TABLE $table;"  >> /tmp/hive_export/${database}_secha.sql
         # listpartitions=`hive -e "use $database; show partitions ${table}"`
         #
