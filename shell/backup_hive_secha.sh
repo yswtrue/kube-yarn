@@ -12,15 +12,15 @@ do
     do
         hive -e "use ${database};show create table $table" >> /tmp/hive_export/${database}_secha.sh
         echo -e ';\c' >> /tmp/hive_export/${database}_secha.sh
-
-        listpartitions=`hive -e "use $database; show partitions ${table}"`
-
-        for tablepart in $listpartitions
-        do
-           partname=`echo ${tablepart/=/=\"}`
-           echo $partname
-           echo "ALTER TABLE $table ADD PARTITION ($partname\");" >> /tmp/hive_export/${database}_secha.sh
-        done
+        echo -e "MSCK REPAIR TABLE $table;"  >> /tmp/hive_export/${database}_secha.sh
+        # listpartitions=`hive -e "use $database; show partitions ${table}"`
+        #
+        # for tablepart in $listpartitions
+        # do
+        #    partname=`echo ${tablepart/=/=\"}`
+        #    echo $partname
+        #    echo "ALTER TABLE $table ADD PARTITION ($partname\");" >> /tmp/hive_export/${database}_secha.sh
+        # done
     done
 
 done
