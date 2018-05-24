@@ -55,7 +55,7 @@ RUN export LD_PRELOAD="/usr/lib/libtcmalloc_minimal.so.4" && \
 RUN update-alternatives --install /usr/bin/python python /usr/local/bin/python3 50
 
 RUN apt-get update && \
-    apt-get install -y libmysql-java
+    apt-get install -y libmysql-java procps
 
 RUN rm -rf /tmp/*
 
