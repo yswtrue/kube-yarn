@@ -1,4 +1,4 @@
-FROM java:8-jre
+FROM openjdk:8-jre
 
 # Add native libs
 ARG HADOOP_VERSION=
@@ -53,6 +53,9 @@ RUN export LD_PRELOAD="/usr/lib/libtcmalloc_minimal.so.4" && \
     make install
 
 RUN update-alternatives --install /usr/bin/python python /usr/local/bin/python3 50
+
+RUN apt-get update && \
+    apt-get install -y libmysql-java
 
 RUN rm -rf /tmp/*
 

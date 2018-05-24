@@ -71,6 +71,7 @@ spec:
       terminationGracePeriodSeconds: 0
       containers:
       - name:                        yarn-rm
+        imagePullPolicy:             Always
         image:                       yswtrue/hadoop:2.7.6
         ports:
         - containerPort:             8088

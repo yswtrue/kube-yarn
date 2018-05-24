@@ -16,10 +16,21 @@ DOCKER_REPO = yswtrue/hadoop
 all: build
 
 ### Build hadoop 2.6 and 2.7 images with native libs.
-build: build-$(HADOOP_27_VERSION)
+build: build-cache-$(HADOOP_27_VERSION)
 
-build-%: apache-flume-$(FLUME_VERSION)-bin.tar.gz apache-hive-$(HIVE_VERSION)-bin.tar.gz Python-$(PYTHON_VERSION).tgz spark-$(SPARK_VERSION)-bin-hadoop2.7.tgz hadoop-native-%.tar
+build-nocache: build-nocache-$(HADOOP_27_VERSION)
+
+build-cache-%: apache-flume-$(FLUME_VERSION)-bin.tar.gz apache-hive-$(HIVE_VERSION)-bin.tar.gz Python-$(PYTHON_VERSION).tgz spark-$(SPARK_VERSION)-bin-hadoop2.7.tgz hadoop-native-cache-%.tar
 	$(DOCKER) build -t hadoop:$* \
+	--build-arg HADOOP_VERSION=$* \
+	--build-arg SPARK_VERSION=$(SPARK_VERSION) \
+	--build-arg PYTHON_VERSION=$(PYTHON_VERSION) \
+	--build-arg HIVE_VERSION=$(HIVE_VERSION) \
+	--build-arg FLUME_VERSION=$(FLUME_VERSION) \
+	.
+
+build-nocache-%: apache-flume-$(FLUME_VERSION)-bin.tar.gz apache-hive-$(HIVE_VERSION)-bin.tar.gz Python-$(PYTHON_VERSION).tgz spark-$(SPARK_VERSION)-bin-hadoop2.7.tgz hadoop-native-nocache-%.tar
+	$(DOCKER) build --no-cache -t hadoop:$* \
 	--build-arg HADOOP_VERSION=$* \
 	--build-arg SPARK_VERSION=$(SPARK_VERSION) \
 	--build-arg PYTHON_VERSION=$(PYTHON_VERSION) \
@@ -78,14 +89,24 @@ apache-flume-%-bin.tar.gz:
 .PRECIOUS: apache-hive-%-bin.tar.gz apache-flume-%-bin.tar.gz Python-%.tgz spark-%-bin-hadoop2.7.tgz protobuf-%.tar.bz2 hadoop-%-src.tar.gz hadoop-%.tar.gz
 
 ### Compile native libs (~10min)
-native_libs_%: hadoop-%-src.tar.gz protobuf-$(PROTOBUF_VERSION).tar.bz2
+native-cache_libs_%: hadoop-%-src.tar.gz protobuf-$(PROTOBUF_VERSION).tar.bz2
 	$(DOCKER) build -f Dockerfile-compile -t hadoop-nativelibs:$*\
+		--build-arg=HADOOP_VERSION=$* \
+		--build-arg=PROTOBUF_VERSION=$(PROTOBUF_VERSION) \
+		.
+native-nocache_libs_%: hadoop-%-src.tar.gz protobuf-$(PROTOBUF_VERSION).tar.bz2
+	$(DOCKER) build --no-cache -f Dockerfile-compile -t hadoop-nativelibs:$*\
 		--build-arg=HADOOP_VERSION=$* \
 		--build-arg=PROTOBUF_VERSION=$(PROTOBUF_VERSION) \
 		.
 
 ### Extract native libs from previous compile target
-hadoop-native-%.tar: native_libs_% hadoop-%.tar.gz
+hadoop-native-cache-%.tar: native-cache_libs_% hadoop-%.tar.gz
+	$(DOCKER) run --rm \
+	 	-e HADOOP_VERSION=$* \
+		hadoop-nativelibs:$* > hadoop-native-$*.tar
+
+hadoop-native-nocache-%.tar: native-nocache_libs_% hadoop-%.tar.gz
 	$(DOCKER) run --rm \
 	 	-e HADOOP_VERSION=$* \
 		hadoop-nativelibs:$* > hadoop-native-$*.tar

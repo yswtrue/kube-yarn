@@ -31,6 +31,7 @@ spec:
       terminationGracePeriodSeconds: 0
       containers:
       - name:                        hdfs-dn
+        imagePullPolicy:             Always
         image:                       yswtrue/hadoop:2.7.6
         command:
            - "/bin/bash"
@@ -54,10 +55,10 @@ spec:
             name:                    hadoop-config
   volumeClaimTemplates:
   - metadata:
-      name: data
+      name:                          data
     spec:
-      accessModes: [ "ReadWriteOnce" ]
-      storageClassName: "nfs"
+      accessModes:                   [ "ReadWriteOnce" ]
+      storageClassName:              "nfs"
       resources:
         requests:
-          storage: 200Gi
+          storage:                   200Gi
