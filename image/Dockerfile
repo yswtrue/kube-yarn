@@ -57,7 +57,11 @@ RUN update-alternatives --install /usr/bin/python python /usr/local/bin/python3 
 RUN apt-get update && \
     apt-get install -y libmysql-java procps
 
+ADD libs/* /usr/share/java/
+
 RUN ln -s /usr/share/java/*.jar /usr/local/hive/lib/
+RUN ln -s /usr/share/java/*.jar /usr/local/flume/lib/
+
 
 RUN rm -rf /tmp/*
 
