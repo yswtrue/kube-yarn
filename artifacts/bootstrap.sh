@@ -94,7 +94,7 @@ if [[ "${HOSTNAME}" =~ "hive" ]]; then
     hdfs dfs -chmod g+w /user/hive/warehouse
     cd $HIVE_HOME/bin
     schematool  -initSchema -dbType mysql -verbose
-    hive
+    hiveserver2
 fi
 
 if [[ $1 == "-d" ]]; then
