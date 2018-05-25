@@ -11,6 +11,7 @@ CONFIG_DIR="/tmp/hadoop-config"
 if [ -d ${CONFIG_DIR} ]; then
     cp ${CONFIG_DIR}/* $HADOOP_PREFIX/etc/hadoop/
     cp ${CONFIG_DIR}/* $SPARK_PREFIX/conf/
+    cp ${CONFIG_DIR}/* $FLUME_HOME/conf/
 else
     echo "ERROR: Could not find config file in $CONFIG_DIR"
     exit 1
@@ -95,6 +96,11 @@ if [[ "${HOSTNAME}" =~ "hive" ]]; then
     cd $HIVE_HOME/bin
     schematool  -initSchema -dbType mysql -verbose
     hiveserver2
+fi
+
+if [[ "${HOSTNAME}" =~ "flume" ]]; then
+    cd $FLUME_HOME
+    ./bin/flume-ng agent -c conf -f conf/flume-conf-serializer-mongosink.properties -n agent1 -Dflume.root.logger=DEBUG,LOGFILE -Dflume.monitoring.type=http -Dflume.monitoring.port=34343
 fi
 
 if [[ $1 == "-d" ]]; then

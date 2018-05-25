@@ -41,7 +41,18 @@ spec:
         volumeMounts:
           - name:                    hadoop-config
             mountPath:               /tmp/hadoop-config
+          - name:                    data
+            mountPath:               /data
       volumes:
         - name:                      hadoop-config
           configMap:
             name:                    hadoop-config
+  volumeClaimTemplates:
+  - metadata:
+      name:                          data
+    spec:
+      accessModes:                   [ "ReadWriteOnce" ]
+      storageClassName:              "nfs"
+      resources:
+        requests:
+          storage:                   200Gi
