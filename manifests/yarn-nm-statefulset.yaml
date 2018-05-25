@@ -1,35 +1,3 @@
-# A headless service to create DNS records
-apiVersion:                          v1
-kind:                                Service
-metadata:
-  name:                              yarn-nm
-  namespace:                         yarn-cluster
-  labels:
-    component:                       yarn-nm
-spec:
-  ports:
-  - port:                            8088
-    name:                            web
-  - port:                            8082
-    name:                            web2
-  # *.yarn-nm.yarn-cluster.svc.cluster.local
-  clusterIP:                         None
-  selector:
-    component:                       yarn-nm
----
-apiVersion:                          extensions/v1beta1
-kind:                                Ingress
-metadata:
-  name:                              yarn-nm
-spec:
-  rules:
-    - host:                          yarn-nm
-      http:
-        paths:
-          - backend:
-              serviceName:           yarn-nm
-              servicePort:           8088
----
 apiVersion:                          apps/v1beta1
 kind:                                StatefulSet
 metadata:
@@ -47,9 +15,6 @@ spec:
       - name:                        yarn-nm
         imagePullPolicy:             Always
         image:                       yswtrue/hadoop:2.7.6
-        ports:
-        - containerPort:             8088
-          name:                      web
         command:
            - "/bin/bash"
            - "/tmp/hadoop-config/bootstrap.sh"

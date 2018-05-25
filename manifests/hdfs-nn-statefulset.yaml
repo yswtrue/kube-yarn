@@ -12,7 +12,7 @@ spec:
     port:                            9000
     protocol:                        TCP
   # *.hdfs-nn.yarn-cluster.svc.cluster.local
-  clusterIP:                         None
+  type:                              NodePort
   selector:
     component:                       hdfs-nn
 ---
@@ -28,7 +28,6 @@ spec:
   ports:
   - port:                            50070
     name:                            web
-  type:                              NodePort
   selector:
     component:                       hdfs-nn
 ---

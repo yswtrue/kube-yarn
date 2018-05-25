@@ -1,4 +1,24 @@
 # A headless service to create DNS records
+apiVersion:                          v1
+kind:                                Service
+metadata:
+  name:                              flume
+  namespace:                         yarn-cluster
+  labels:
+    component:                       flume
+spec:
+  ports:
+  - name:                            agent-source-1
+    port:                            41414
+    protocol:                        TCP
+  - name:                            monitoring
+    port:                            34343
+    protocol:                        TCP
+  # *.flume.yarn-cluster.svc.cluster.local
+  type:                              NodePort
+  selector:
+    component:                       flume
+---
 apiVersion:                          apps/v1beta1
 kind:                                StatefulSet
 metadata:

@@ -1,4 +1,21 @@
 # A headless service to create DNS records
+apiVersion:                          v1
+kind:                                Service
+metadata:
+  name:                              hive
+  namespace:                         yarn-cluster
+  labels:
+    component:                       hive
+spec:
+  ports:
+  - name:                            hive
+    port:                            10000
+    protocol:                        TCP
+  # *.hive.yarn-cluster.svc.cluster.local
+  type:                              NodePort
+  selector:
+    component:                       hive
+---
 apiVersion:                          apps/v1beta1
 kind:                                StatefulSet
 metadata:

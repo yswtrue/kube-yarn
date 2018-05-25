@@ -10,8 +10,7 @@ spec:
   ports:
   - port:                            8088
     name:                            web
-  # *.yarn-rm.yarn-cluster.svc.cluster.local
-  clusterIP:                         None
+  type:                              NodePort
   selector:
     component:                       yarn-rm
 ---
@@ -73,9 +72,6 @@ spec:
       - name:                        yarn-rm
         imagePullPolicy:             Always
         image:                       yswtrue/hadoop:2.7.6
-        ports:
-        - containerPort:             8088
-          name:                      web
         command:
            - "/bin/bash"
            - "/tmp/hadoop-config/bootstrap.sh"

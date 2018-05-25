@@ -1,21 +1,3 @@
-# A headless service to create DNS records
-apiVersion:                          v1
-kind:                                Service
-metadata:
-  name:                              hdfs-dn
-  namespace:                         yarn-cluster
-  labels:
-    component:                       hdfs-dn
-spec:
-  ports:
-  - name:                            dfs
-    port:                            9000
-    protocol:                        TCP
-  # *.hdfs-dn.yarn-cluster.svc.cluster.local
-  clusterIP:                         None
-  selector:
-    component:                       hdfs-dn
----
 apiVersion:                          apps/v1beta1
 kind:                                StatefulSet
 metadata:
