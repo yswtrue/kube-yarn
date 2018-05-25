@@ -57,6 +57,8 @@ RUN update-alternatives --install /usr/bin/python python /usr/local/bin/python3 
 RUN apt-get update && \
     apt-get install -y libmysql-java procps
 
+RUN ln -s /usr/share/java/*.jar /usr/local/hive/lib/
+
 RUN rm -rf /tmp/*
 
 WORKDIR $HADOOP_PREFIX
