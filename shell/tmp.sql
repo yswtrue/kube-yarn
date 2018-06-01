@@ -1,0 +1,5 @@
+
+CREATE USER 'hive'@'%';
+CREATE DATABASE hive;
+GRANT ALL PRIVILEGES ON hive.* To 'hive'@'%' IDENTIFIED BY 'hive';
+FLUSH PRIVILEGES;

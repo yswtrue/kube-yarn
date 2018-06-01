@@ -11,15 +11,11 @@ spec:
   - name:                            dfs
     port:                            9000
     protocol:                        TCP
-  - name:                            web
-    port:                            50070
-    protocol:                        TCP
   # *.hdfs-nn.yarn-cluster.svc.cluster.local
   type:                              NodePort
   selector:
     component:                       hdfs-nn
 ---
-# Service to access the yarn web ui
 apiVersion:                          v1
 kind:                                Service
 metadata:
@@ -29,8 +25,10 @@ metadata:
     component:                       hdfs-nn
 spec:
   ports:
-  - port:                            50070
-    name:                            web
+  - name:                            web
+    port:                            50070
+    protocol:                        TCP
+  # *.hdfs-nn.yarn-cluster.svc.cluster.local
   selector:
     component:                       hdfs-nn
 ---

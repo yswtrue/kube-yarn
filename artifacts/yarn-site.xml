@@ -8,6 +8,19 @@
     </property>
 
     <property>
+        <name>yarn.resourcemanager.webapp.address</name>
+        <value>0.0.0.0:80</value>
+    </property>
+    <property>
+        <name>yarn.nodemanager.webapp.address</name>
+        <value>${yarn.nodemanager.hostname}:80</value>
+    </property>
+    <property>
+        <name>mapreduce.jobhistory.webapp.address</name>
+        <value>0.0.0.0:80</value>
+    </property>
+
+    <property>
         <name>yarn.nodemanager.vmem-check-enabled</name>
         <value>false</value>
     </property>

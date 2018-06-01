@@ -2,58 +2,58 @@
 apiVersion:                          v1
 kind:                                Service
 metadata:
-  name:                              spark-history
+  name:                              mr-history
   namespace:                         yarn-cluster
   labels:
-    component:                       spark-history
+    component:                       mr-history
 spec:
   ports:
   - port:                            80
     name:                            web
-  type:                              NodePort
   selector:
-    component:                       spark-history
+    component:                       mr-history
 ---
 apiVersion:                          extensions/v1beta1
 kind:                                Ingress
 metadata:
-  name:                              spark-history
+  name:                              mr-history
 spec:
   rules:
-    - host:                          spark-history
+    - host:                          mr-history
       http:
         paths:
           - backend:
-              serviceName:           spark-history
+              serviceName:           mr-history
               servicePort:           80
 ---
-apiVersion:                          apps/v1beta1
-kind:                                Deployment
+apiVersion:                          extensions/v1beta1
+kind:                                Ingress
 metadata:
-  name:                              spark-history
+    name:                            mr-history
 spec:
+    rules:
+        - host:                      mr-history
+          http:
+            paths:
+              - backend:
+                  serviceName:       mr-history
+                  servicePort:       80
+---
+apiVersion:                          apps/v1beta1
+kind:                                StatefulSet
+metadata:
+  name:                              mr-history
+spec:
+  serviceName:                       "mr-history"
   replicas:                          1
   template:
     metadata:
       labels:
-        component:                   spark-history
+        component:                   mr-history
     spec:
       terminationGracePeriodSeconds: 0
       containers:
-      - name:                        spark-history
-        env:
-          - name:                    MY_POD_NAME
-            valueFrom:
-              fieldRef:
-                fieldPath:           metadata.name
-          - name:                    MY_POD_NAMESPACE
-            valueFrom:
-              fieldRef:
-                fieldPath:           metadata.namespace
-          - name:                    MY_POD_IP
-            valueFrom:
-              fieldRef:
-                fieldPath:           status.podIP
+      - name:                        mr-history
         image:                       yswtrue/hadoop:2.7.6
         command:
            - "/bin/bash"

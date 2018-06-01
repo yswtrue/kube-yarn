@@ -45,6 +45,11 @@ if [[ "${HOSTNAME}" =~ "yarn-rm" ]]; then
     ./start-yarn-rm.sh
 fi
 
+if [[ "${HOSTNAME}" =~ "mr-history" ]]; then
+    cd $HADOOP_PREFIX/sbin
+    ./mr-jobhistory-daemon.sh start historyserver
+fi
+
 if [[ "${HOSTNAME}" =~ "yarn-nm" ]]; then
     sed -i '/<\/configuration>/d' $HADOOP_PREFIX/etc/hadoop/yarn-site.xml
     cat >> $HADOOP_PREFIX/etc/hadoop/yarn-site.xml <<- EOM

@@ -1,19 +1,3 @@
-# A headless service to create DNS records
-apiVersion:                          v1
-kind:                                Service
-metadata:
-  name:                              yarn-rm
-  namespace:                         yarn-cluster
-  labels:
-    component:                       yarn-rm
-spec:
-  ports:
-  - port:                            8088
-    name:                            web
-  type:                              NodePort
-  selector:
-    component:                       yarn-rm
----
 # Service to access the yarn web ui
 apiVersion:                          v1
 kind:                                Service
@@ -24,7 +8,7 @@ metadata:
     component:                       yarn-ui
 spec:
   ports:
-  - port:                            8088
+  - port:                            80
     name:                            web
   selector:
     component:                       yarn-rm
@@ -40,7 +24,7 @@ spec:
         paths:
           - backend:
               serviceName:           yarn-ui
-              servicePort:           8088
+              servicePort:           80
 ---
 apiVersion:                          extensions/v1beta1
 kind:                                Ingress
@@ -53,7 +37,7 @@ spec:
             paths:
               - backend:
                   serviceName:       yarn-rm
-                  servicePort:       8088
+                  servicePort:       80
 ---
 apiVersion:                          apps/v1beta1
 kind:                                StatefulSet
