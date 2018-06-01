@@ -2,29 +2,16 @@
 apiVersion:                          v1
 kind:                                Service
 metadata:
-  name:                              yarn-ui
+  name:                              yarn-rm
   namespace:                         yarn-cluster
   labels:
-    component:                       yarn-ui
+    component:                       yarn-rm
 spec:
   ports:
   - port:                            80
     name:                            web
   selector:
     component:                       yarn-rm
----
-apiVersion:                          extensions/v1beta1
-kind:                                Ingress
-metadata:
-  name:                              yarn-ui
-spec:
-  rules:
-    - host:                          yarn-ui
-      http:
-        paths:
-          - backend:
-              serviceName:           yarn-ui
-              servicePort:           80
 ---
 apiVersion:                          extensions/v1beta1
 kind:                                Ingress
